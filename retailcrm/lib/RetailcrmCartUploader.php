@@ -253,7 +253,7 @@ class RetailcrmCartUploader
             $crmCart = [
                 'externalId' => $cartExternalId,
                 'customer' => ['externalId' => $cart->id_customer],
-                'clearAt'=> null,
+                'clearAt' => null,
                 'createdAt' => $cart->date_add,
                 'droppedAt' => date('Y-m-d H:i:s'),
             ];
@@ -272,11 +272,13 @@ class RetailcrmCartUploader
                     'offer' => [
                         'externalId' => !empty($offers)
                             ? $product['id_product'] . '#' . $product['id_product_attribute']
-                            : $product['id_product']
+                            : $product['id_product'],
                     ],
-                    'quantity'=> $product['cart_quantity'],
-                    'price'=> $product['price'],
-                    'createdAt'=> $product['date_add'],
+                    'quantity' => $product['cart_quantity'],
+                    'createdAt' => $product['date_add'],
+                    'price' => !empty($product['rate'])
+                        ? round($product['price'], 2) + (round($product['price'], 2) * $product['rate'] / 100)
+                        : round($product['price'], 2),
                 ];
             }
         } catch (Exception $exception) {
